@@ -14,12 +14,23 @@ var decimalAdjust = exports.decimalAdjust = function(type, value, exp) {
     value = +value;
     exp = +exp;
     // If the value is not a number or the exp is not an integer...
-    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 0.5 === 0)) {
         return NaN;
+    }
+    var nearestHalf = false;
+    if ( exp % 1 !== 0 ) {
+        nearestHalf = true;
+        exp = Math.sign( exp ) === 1 ? Math.ceil( exp ) : Math.floor( exp );
     }
     // Shift
     value = value.toString().split('e');
     value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+    // Adjust for nearest half
+    if ( nearestHalf ) {
+        var leftmost = Math.abs( value % 10 );
+        var direction = Math[type]((leftmost-5)/5);
+        value += 5 - leftmost + direction * 5;
+    }
     // Shift back
     value = value.toString().split('e');
     return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
