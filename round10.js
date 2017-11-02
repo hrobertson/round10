@@ -36,15 +36,6 @@ var decimalAdjust = exports.decimalAdjust = function(type, value, exp) {
     return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
 }
 
-4
-4-5 = -1
--1/5 = -0.2
-round -0.2 = -0
-
-5-4 = 1
-
--5 - -4 = 
-
 module.exports = {
     round10: function(value, exp) {
         return decimalAdjust('round', value, exp);
